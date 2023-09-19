@@ -1,18 +1,15 @@
 import org.openqa.selenium.By;
-import org.openqa.selenium.ElementNotInteractableException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.testng.Assert;
-import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
-import java.beans.Expression;
 import java.util.List;
 import java.util.Set;
 
-public class BuyTicketsTest {
+public class BuyTicketsNextDay {
     private WebDriver driver;
     private String parentWindow;
 
@@ -32,6 +29,20 @@ public class BuyTicketsTest {
         WebElement inputArrival = driver.findElement(By.id("input-station-arrival-name"));
         Assert.assertNotNull(inputArrival);
         inputArrival.sendKeys("Sinaia");
+        /**
+         * Calendar
+         */
+        WebElement calendarButton = driver.findElement(By.cssSelector("#plecare > div:nth-child(2) > div.inf-data"));
+        calendarButton.click();
+        List<WebElement> calendarDays = driver.findElements(By.cssSelector("td.day"));
+        WebElement currentDay = driver.findElement(By.cssSelector("td.day.active.today"));
+        for(int i = 0; i < calendarDays.size(); i++){
+            if(calendarDays.get(i).equals(currentDay)){
+                WebElement nextDay = calendarDays.get(i + 1);
+                nextDay.click();
+            }
+        }
+        Thread.sleep(1_000);
         WebElement searchButton = driver.findElement(By.cssSelector("#form-search > div.container > button"));
         searchButton.click();
         Thread.sleep(1_000);
@@ -46,18 +57,10 @@ public class BuyTicketsTest {
                  * Get the first ticket available
                  */
                 List<WebElement> buttonList = driver.findElements(By.cssSelector("button.btn.mt-1.mt-xl-0.btn-outline-primary"));
-                for(WebElement buttons: buttonList){
-                    if(buttons.isDisplayed()){
-                        WebElement buyTicketButton = buttons;
-                        buyTicketButton.click();
-                        break;
-                    }
-                }
+                WebElement buyTicketButton = buttonList.get(0);
+                Assert.assertNotNull(buyTicketButton, "Tickets not found");
+                buyTicketButton.click();
             }
         }
-    }
-    @AfterTest
-    private void quitWebDriver() {
-        driver.quit();
     }
 }
