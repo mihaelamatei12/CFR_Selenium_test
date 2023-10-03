@@ -1,3 +1,5 @@
+package tests_done;
+
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -9,7 +11,7 @@ import org.testng.annotations.Test;
 import java.util.List;
 import java.util.Set;
 
-public class BuyTicketsNextDay {
+public class BuyTicketsNextDayTest {
     private WebDriver driver;
     private String parentWindow;
 
@@ -30,7 +32,7 @@ public class BuyTicketsNextDay {
         Assert.assertNotNull(inputArrival);
         inputArrival.sendKeys("Sinaia");
         /**
-         * Calendar
+         * Calendar/ Select the next day
          */
         WebElement calendarButton = driver.findElement(By.cssSelector("#plecare > div:nth-child(2) > div.inf-data"));
         calendarButton.click();
@@ -48,7 +50,6 @@ public class BuyTicketsNextDay {
         Thread.sleep(1_000);
 
         Set<String> allWindows = driver.getWindowHandles();
-
         for(String childWindow : allWindows) {
             if(!parentWindow.equalsIgnoreCase(childWindow)) {
                 driver.switchTo().window(childWindow);
