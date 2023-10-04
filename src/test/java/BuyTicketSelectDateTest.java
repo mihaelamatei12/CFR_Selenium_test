@@ -27,8 +27,10 @@ public class BuyTicketSelectDateTest {
     @Test
     private void searchTicketsForSelectedDay() throws InterruptedException {
         WebElement inputDeparture = driver.findElement(By.id("input-station-departure-name"));
+        Assert.assertNotNull(inputDeparture);
         inputDeparture.sendKeys("București Nord");
         WebElement inputArrival = driver.findElement(By.id("input-station-arrival-name"));
+        Assert.assertNotNull(inputArrival);
         inputArrival.sendKeys("Sinaia ");
 
         Thread.sleep(1_000);
@@ -36,12 +38,14 @@ public class BuyTicketSelectDateTest {
         String month = "octombrie";
         String year = "2023";
 
-        WebElement calendarButton = driver.findElement(By.cssSelector("#plecare > div:nth-child(2) > div.inf-data"));
-        calendarButton.click();
+        WebElement calendar = driver.findElement(By.cssSelector("#plecare > div:nth-child(2) > div.inf-data"));
+        Assert.assertNotNull(calendar);
+        calendar.click();
         /**
          * Select next month
          */
         WebElement nextMont = driver.findElement(By.cssSelector("#plecare > div.buttonInchidereCalendar.bootstrap-datetimepicker-widget.dropdown-menu.usetwentyfour.bottom > ul > li.show > div > div.datepicker-days > table > thead > tr:nth-child(1) > th.next"));
+        Assert.assertNotNull(nextMont);
         nextMont.click();
 
         List<WebElement> calendarDays = driver.findElements(By.cssSelector("td.day"));
@@ -75,6 +79,7 @@ public class BuyTicketSelectDateTest {
          * Click on the search button
          */
         WebElement searchButton = driver.findElement(By.cssSelector("#form-search > div.container > button"));
+        Assert.assertNotNull(searchButton);
         searchButton.click();
     }
 

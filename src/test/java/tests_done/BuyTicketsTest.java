@@ -27,19 +27,29 @@ public class BuyTicketsTest {
         parentWindow = driver.getWindowHandle();
     }
     @Test
-    private void searchTickets() throws InterruptedException {
+    private void searchAndBuyTicket() throws InterruptedException {
+        /**
+         * Input departure city
+         */
         WebElement inputDeparture = driver.findElement(By.id("input-station-departure-name"));
         Assert.assertNotNull(inputDeparture);
         inputDeparture.sendKeys("București Nord");
+        /**
+         * Input arrival city
+         */
         WebElement inputArrival = driver.findElement(By.id("input-station-arrival-name"));
         Assert.assertNotNull(inputArrival);
         inputArrival.sendKeys("Sinaia");
+        /**
+         *
+         * Click on search
+         */
         WebElement searchButton = driver.findElement(By.cssSelector("#form-search > div.container > button"));
+        Assert.assertNotNull(searchButton);
         searchButton.click();
         Thread.sleep(1_000);
-
         Set<String> allWindows = driver.getWindowHandles();
-
+        Assert.assertNotEquals(true,allWindows.isEmpty());
         for(String childWindow : allWindows) {
             if(!parentWindow.equalsIgnoreCase(childWindow)) {
                 driver.switchTo().window(childWindow);
@@ -48,6 +58,7 @@ public class BuyTicketsTest {
                  * Get the first ticket available
                  */
                 List<WebElement> buttonList = driver.findElements(By.cssSelector("button.btn.mt-1.mt-xl-0.btn-outline-primary"));
+                Assert.assertNotEquals(true,buttonList.isEmpty());
                 for(WebElement buttons: buttonList){
                     if(buttons.isDisplayed()){
                         WebElement buyTicketButton = buttons;

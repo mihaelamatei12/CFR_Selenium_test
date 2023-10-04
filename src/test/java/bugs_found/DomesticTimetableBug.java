@@ -23,10 +23,11 @@ public class DomesticTimetableBug {
          * Change language to English
          */
         WebElement flag = driver.findElement(By.cssSelector("#wp-megamenu-item-wpml-ls-2-en > a > img"));
+        Assert.assertNotNull(flag);
         flag.click();
     }
     @Test
-    private void warningIncompleteNameBug() throws InterruptedException {
+    private void verifyIfTheWarningIsInEnglish() throws InterruptedException {
         /**
          * Input incomplete names
          */
@@ -34,19 +35,19 @@ public class DomesticTimetableBug {
         Assert.assertNotNull(inputDeparture);
         inputDeparture.sendKeys("Buc");
         WebElement inputArrival = driver.findElement(By.id("input-station-arrival-name"));
+        Assert.assertNotNull(inputArrival);
         inputArrival.sendKeys("Si");
         Thread.sleep(1_000);
         WebElement warningDeparture = driver.findElement(By.cssSelector("#span-validation-input-station-departure-name"));
-        WebElement warningArrival = driver.findElement(By.cssSelector("#span-validation-input-station-arrival-name"));
+        Assert.assertNotNull(warningDeparture);
         /**
          * Verify if the warning appears
          */
-        if(warningDeparture.isDisplayed()){
-            System.out.println("\"" + warningDeparture.getText() + "\"" + " - The text is in Romanian");
-        }
+        Assert.assertTrue(warningDeparture.isDisplayed());
         /**
          * The warnings are shown in Romanian and the page it's in english
          */
+        Assert.assertEquals(warningDeparture.getText(),"No station with this name was found!");
         Thread.sleep(1_000);
     }
     @AfterTest

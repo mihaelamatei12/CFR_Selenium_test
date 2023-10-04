@@ -3,6 +3,8 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.interactions.Actions;
+import org.testng.Assert;
+import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
@@ -24,11 +26,16 @@ public class Report {
     }
 
     @Test
-    private void findBug() throws InterruptedException{
+    private void verifyWarnings() throws InterruptedException{
         WebElement report = driver.findElement(By.cssSelector("#menu-item-2715 > a"));
+        Assert.assertNotNull(report);
         report.click();
         Thread.sleep(1_000);
+        /**
+         * Switch on new page
+         */
         Set<String> allWindows = driver.getWindowHandles();
+        Assert.assertNotEquals(true,allWindows.isEmpty());
         for(String childWindow : allWindows){
             if(!parentWindow.equalsIgnoreCase(childWindow)){
                 driver.findElement(By.cssSelector("#menu-item-36802 > a")).click();
@@ -37,8 +44,9 @@ public class Report {
                  */
                 Thread.sleep(1_000);
                 WebElement mail = driver.findElement(By.cssSelector("#field_eykhw"));
+                Assert.assertNotNull(mail);
                 mail.click();
-                mail.sendKeys("aaa");
+                mail.sendKeys("abc");
                 /**
                  * Check hover
                  */
@@ -46,5 +54,9 @@ public class Report {
 //                actions.moveToElement(mail);
             }
         }
+    }
+    @AfterTest
+    private void quitWebDriver() {
+        driver.quit();
     }
 }

@@ -7,6 +7,7 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
+import org.testng.Assert;
 
 import java.util.Set;
 
@@ -25,48 +26,46 @@ public class AdvancedSearchBugTest {
     }
 
     @Test
-    private void findBug() throws InterruptedException{
+    private void verifyIfTheSecondPageRemainsInRomanian() throws InterruptedException{
         /**
-         * Primary page is in romanian automaticaly
+         * First page is in romanian automaticaly
          */
         WebElement flag = driver.findElement(By.cssSelector("#wp-megamenu-item-wpml-ls-2-en > a > img"));
-        if(flag.getAttribute("alt").equals("en")){
-            System.out.println( "\"" + driver.getTitle() + "\"" +" - The page is in Romanian");
-        } else if(flag.getAttribute("alt").equals("ro")){
-            System.out.println("\"" + driver.getTitle() + "\"" + " - The page is in english");
-        }
+        Assert.assertNotNull(flag);
+        Assert.assertEquals(flag.getAttribute("alt"),"en","Page in Romanian");
         /**
          * Click on calendar
          */
-        WebElement calendarButton = driver.findElement(By.cssSelector("#plecare > div:nth-child(2) > div.inf-data"));
-        calendarButton.click();
+        WebElement calendar = driver.findElement(By.cssSelector("#plecare > div:nth-child(2) > div.inf-data"));
+        Assert.assertNotNull(calendar);
+        calendar.click();
         /**
          * Click on the up and down arrow symbol
          */
         WebElement arrowsSymbol = driver.findElement(By.cssSelector("#swap > i"));
+        Assert.assertNotNull(arrowsSymbol);
         arrowsSymbol.click();
         /**
          * Click on "advanced search"
          */
         WebElement advancedSearchButton = driver.findElement(By.cssSelector("#linkCautareAvansata"));
+        Assert.assertNotNull(advancedSearchButton);
         advancedSearchButton.click();
-        Set<String> allWindows = driver.getWindowHandles();
         /**
-         * Switch to new webpage
+         * Switch to new page
          */
+        Set<String> allWindows = driver.getWindowHandles();
+        Assert.assertNotEquals(true,allWindows.isEmpty());
         for(String childWindow : allWindows){
             if(!parentWindow.equalsIgnoreCase(childWindow)){
                 driver.switchTo().window(childWindow);
                 Thread.sleep(1_000);
                 /**
-                 * Verify that the second page opened is in english
+                 * Verify that the second page opened is in romanian
                  */
-                WebElement englishButton = driver.findElement(By.id("button-culture-en-GB"));
-                if(englishButton.getAttribute("class").equals("active")){
-                    System.out.println(driver.getTitle() + " - The Page is in English");
-                } else {
-                    System.out.println(driver.getTitle() + " - It isn't in English");
-                }
+                WebElement romanianButton = driver.findElement(By.id("button-culture-ro-RO"));
+                Assert.assertNotNull(romanianButton);
+                Assert.assertEquals(romanianButton.getAttribute("class"),"active");
             }
         }
         /**

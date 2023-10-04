@@ -4,6 +4,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.testng.Assert;
 import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
@@ -55,20 +56,33 @@ public class HourBug {
         hoursList.add("23");
     }
     @Test
-    private void searchForTicket() throws InterruptedException {
+    private void verifyIfAllHoursAppearWhenClickingOnLeftAndRightButtons() throws InterruptedException {
+        /**
+         * Select
+         */
         WebElement internationalButton = driver.findElement(By.cssSelector("#menu-item-14317 > a"));
+        Assert.assertNotNull(internationalButton);
         internationalButton.click();
-        Set<String> allWindows = driver.getWindowHandles();
         /**
          * Switch to the new opened tab
          */
+        Set<String> allWindows = driver.getWindowHandles();
+        Assert.assertNotEquals(true,allWindows.isEmpty(),"The Set is empty");
         for (String childWindow : allWindows) {
             if (!parentWindow.equalsIgnoreCase(childWindow)) {
                 driver.switchTo().window(childWindow);
                 Thread.sleep(2_000);
-                WebElement onewayTicketButton = driver.findElement(By.cssSelector("body > rtt-app > rtt-app > ng-component > rtt-booking-search > div.container > form > div.row.trip-type > div > div > div:nth-child(1) > button"));
-                onewayTicketButton.click();
+                /**
+                 * Select search for One Way Ticket
+                 */
+                WebElement onewayButton = driver.findElement(By.cssSelector("body > rtt-app > rtt-app > ng-component > rtt-booking-search > div.container > form > div.row.trip-type > div > div > div:nth-child(1) > button"));
+                Assert.assertNotNull(onewayButton);
+                onewayButton.click();
+                /**
+                 * Input Hour
+                 */
                 WebElement selectHour = driver.findElement(By.cssSelector("#outward-reference-time > fieldset > div > div.ngb-tp-hour > input"));
+                Assert.assertNotNull(selectHour);
                 selectHour.clear();
                 selectHour.sendKeys(initialHour);
                 Thread.sleep(500);
@@ -77,44 +91,41 @@ public class HourBug {
                  * Click right arrow. Created List
                  */
                 WebElement rightArrow = driver.findElement(By.cssSelector("#outward-reference-time > fieldset > div > div.ngb-tp-hour > button:nth-child(1) > span.chevron"));
+                Assert.assertNotNull(rightArrow);
                 List<String> countNumberList = new ArrayList<>();
                 /**
                  *  Count ascending. Add appeared hours to List.
                  */
                 for(int i = 0; i < 24; i++) {
+                    Assert.assertNotNull(selectHour.getAttribute("value"));
                     countNumberList.add(selectHour.getAttribute("value"));
                     rightArrow.click();
                 }
+                System.out.println("Count: " + countNumberList);
                 /**
                  * See if countNumberList contains each element of hourList
                  */
                 for(String hour : hoursList){
-                    if(countNumberList.contains(hour)){
-                        System.out.println("It contains " + hour);
-                    } else {
-                        System.out.println("It doesn't contains " + hour);
-                    }
+                    Assert.assertTrue(countNumberList.contains(hour), hour + " doesn't appear");
                 }
-                System.out.println("Count: " + countNumberList);
                 Thread.sleep(1_000);
                 /**
                  * Countdown. Add appeared hours to List.
                  */
                 WebElement leftArrow = driver.findElement(By.cssSelector("#outward-reference-time > fieldset > div > div.ngb-tp-hour > button:nth-child(3) > span.chevron.bottom"));
+                Assert.assertNotNull(leftArrow);
                 List<String> countdownNumberList = new ArrayList<>();
                 for(int i = 0; i < 24; i++){
+                    Assert.assertNotNull(selectHour.getAttribute("value"));
                     countdownNumberList.add(selectHour.getAttribute("value"));
                     leftArrow.click();
                 }
+                System.out.println("Countdown: " + countdownNumberList);
                 /**
                  * See if countdownNumberList contains each element of hourList
                  */
                 for(String hour: hoursList){
-                    if(countdownNumberList.contains(hour)){
-                        System.out.println("It contains " + hour);
-                    } else {
-                        System.out.println("It doesn't contains " + hour);
-                    }
+                    Assert.assertTrue(countdownNumberList.contains(hour), hour + " doesn't appear");
                 }
                 System.out.println("Countdown: " + countdownNumberList);
             }
