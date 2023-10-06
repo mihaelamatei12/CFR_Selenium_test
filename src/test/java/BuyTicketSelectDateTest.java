@@ -1,23 +1,38 @@
+import bugs_found.AdvancedSearchBugTest;
+import bugs_found.HourBug;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.testng.Assert;
 import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
+import tests_done.BuyTicketsInternationalTest;
 
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Properties;
 
 public class BuyTicketSelectDateTest {
     private WebDriver driver;
     private String parentWindow;
 
+    private static Logger LOGGER = LoggerFactory.getLogger(BuyTicketSelectDateTest.class);
+
     @BeforeTest
-    private void initializeWebDriver() {
-        System.setProperty("webdriver.chrome.driver","/home/mihaela/Selenium/chromedriver-linux64/chromedriver");
+    private void initializeWebDriver() throws IOException {
+        String rootPath = BuyTicketsInternationalTest.class.getClassLoader().getResource("").getPath();
+        String driverConfigPath = rootPath + "driver_path.properties";
+        Properties properties = new Properties();
+        properties.load(new FileInputStream(driverConfigPath));
+        String driverPath = properties.getProperty("path");
+        System.setProperty("webdriver.chrome.driver", driverPath);
         driver = new ChromeDriver();
         driver.manage().window().maximize();
         driver.get("https://www.cfrcalatori.ro/");
@@ -70,10 +85,10 @@ public class BuyTicketSelectDateTest {
 //            calendarYearsStringList.add(yearElement.getText());
 //        }
 
-        System.out.println("Zilele: " + calendarDaysMap);
-        System.out.println("Lunile: " + calendarMonths.get(0).getText());
-        System.out.println("Anii: " + calendarYearsStringList);
-        System.out.println("text: " + driver.findElement(By.cssSelector("#plecare > div.buttonInchidereCalendar.bootstrap-datetimepicker-widget.dropdown-menu.usetwentyfour.bottom > ul > li.show > div > div.datepicker-months > table > tbody > tr > td > span:nth-child(1)")).getText());
+        LOGGER.info("Zilele: " + calendarDaysMap);
+        LOGGER.info("Lunile: " + calendarMonths.get(0).getText());
+        LOGGER.info("Anii: " + calendarYearsStringList);
+        LOGGER.info("text: " + driver.findElement(By.cssSelector("#plecare > div.buttonInchidereCalendar.bootstrap-datetimepicker-widget.dropdown-menu.usetwentyfour.bottom > ul > li.show > div > div.datepicker-months > table > tbody > tr > td > span:nth-child(1)")).getText());
         calendarDaysMap.get(day).click();
         /**
          * Click on the search button

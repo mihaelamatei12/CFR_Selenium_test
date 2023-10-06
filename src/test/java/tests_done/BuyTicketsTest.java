@@ -11,7 +11,10 @@ import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
 import java.beans.Expression;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.List;
+import java.util.Properties;
 import java.util.Set;
 
 public class BuyTicketsTest {
@@ -19,8 +22,13 @@ public class BuyTicketsTest {
     private String parentWindow;
 
     @BeforeTest
-    private void initializeWebDriver() {
-        System.setProperty("webdriver.chrome.driver","/home/mihaela/Selenium/chromedriver-linux64/chromedriver");
+    private void initializeWebDriver() throws IOException {
+        String rootPath = BuyTicketsTest.class.getClassLoader().getResource("").getPath();
+        String driverConfigPath = rootPath + "driver_path.properties";
+        Properties properties = new Properties();
+        properties.load(new FileInputStream(driverConfigPath));
+        String driverPath = properties.getProperty("path");
+        System.setProperty("webdriver.chrome.driver", driverPath);
         driver = new ChromeDriver();
         driver.manage().window().maximize();
         driver.get("https://www.cfrcalatori.ro/");

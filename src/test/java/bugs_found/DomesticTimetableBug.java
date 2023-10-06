@@ -9,13 +9,23 @@ import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.util.Objects;
+import java.util.Properties;
+
 
 public class DomesticTimetableBug {
     private WebDriver driver;
 
     @BeforeTest
-    private void initializeWebDriver() {
-        System.setProperty("webdriver.chrome.driver","/home/mihaela/Selenium/chromedriver-linux64/chromedriver");
+    private void initializeWebDriver() throws IOException {
+        String rootPath = DomesticTimetableBug.class.getClassLoader().getResource("").getPath();
+        String driverConfigPath = rootPath + "driver_path.properties";
+        Properties properties = new Properties();
+        properties.load(new FileInputStream(driverConfigPath));
+        String driverPath = properties.getProperty("path");
+        System.setProperty("webdriver.chrome.driver", driverPath);
         driver = new ChromeDriver();
         driver.manage().window().maximize();
         driver.get("https://www.cfrcalatori.ro/");

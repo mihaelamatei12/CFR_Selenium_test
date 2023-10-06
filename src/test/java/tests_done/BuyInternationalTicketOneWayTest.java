@@ -10,6 +10,8 @@ import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
 import java.awt.*;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.List;
@@ -23,8 +25,13 @@ public class BuyInternationalTicketOneWayTest {
     private String minutes = "30";
 
     @BeforeTest
-    private void initializeWebDriver() {
-        System.setProperty("webdriver.chrome.driver","/home/mihaela/Selenium/chromedriver-linux64/chromedriver");
+    private void initializeWebDriver() throws IOException {
+        String rootPath = BuyInternationalTicketOneWayTest.class.getClassLoader().getResource("").getPath();
+        String driverConfigPath = rootPath + "driver_path.properties";
+        Properties properties = new Properties();
+        properties.load(new FileInputStream(driverConfigPath));
+        String driverPath = properties.getProperty("path");
+        System.setProperty("webdriver.chrome.driver", driverPath);
         driver = new ChromeDriver();
         driver.manage().window().maximize();
         driver.get("https://www.cfrcalatori.ro/");

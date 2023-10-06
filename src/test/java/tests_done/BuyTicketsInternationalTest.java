@@ -1,26 +1,39 @@
 package tests_done;
 
-//import dev.failsafe.internal.util.Assert;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.slf4j.LoggerFactory;
 import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 import org.testng.Assert;
 
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.List;
+import java.util.Properties;
 import java.util.Set;
+//import org.testng.log4testng.Logger;
 
 public class BuyTicketsInternationalTest {
     private WebDriver driver;
 
     private String parentWindow;
+    private static Logger LOGGER = LogManager.getLogger(BuyTicketsInternationalTest.class);
 
     @BeforeTest
-    private void initializeWebDriver() {
-        System.setProperty("webdriver.chrome.driver","/home/mihaela/Selenium/chromedriver-linux64/chromedriver");
+    private void initializeWebDriver() throws IOException {
+        String rootPath = BuyTicketsInternationalTest.class.getClassLoader().getResource("").getPath();
+        String driverConfigPath = rootPath + "driver_path.properties";
+        Properties properties = new Properties();
+        properties.load(new FileInputStream(driverConfigPath));
+        String driverPath = properties.getProperty("path");
+        System.setProperty("webdriver.chrome.driver", driverPath);
         driver = new ChromeDriver();
         driver.manage().window().maximize();
         driver.get("https://www.cfrcalatori.ro/");
@@ -86,12 +99,12 @@ public class BuyTicketsInternationalTest {
                 String returnUrl = "https://bileteinternationale.cfrcalatori.ro/ro/booking/select/return";
                 while (driver.getCurrentUrl().equals(returnUrl)) {
                     Thread.sleep(5000);
-                    System.out.println("Check for ticket");
+                    LOGGER.info("Check for ticket");
                     try {
                         viewOfferButton.click();
                     } catch (Exception e) {
                         Assert.assertNotNull(viewOfferButton);
-                        System.out.println("error");
+                        LOGGER.error("Ticket not found");
                     }
                 }
                 /**

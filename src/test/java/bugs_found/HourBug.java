@@ -4,11 +4,16 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.testng.Assert;
 import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.util.Properties;
 import java.util.Set;
 import java.util.List;
 import java.util.ArrayList;
@@ -23,9 +28,16 @@ public class HourBug {
 
     private List<String> hoursList = new ArrayList<>();
 
+    private static Logger LOGGER = LoggerFactory.getLogger(HourBug.class);
+
     @BeforeTest
-    private void initializeWebDriver() {
-        System.setProperty("webdriver.chrome.driver","/home/mihaela/Selenium/chromedriver-linux64/chromedriver");
+    private void initializeWebDriver() throws IOException {
+        String rootPath = HourBug.class.getClassLoader().getResource("").getPath();
+        String driverConfigPath = rootPath + "driver_path.properties";
+        Properties properties = new Properties();
+        properties.load(new FileInputStream(driverConfigPath));
+        String driverPath = properties.getProperty("path");
+        System.setProperty("webdriver.chrome.driver", driverPath);
         driver = new ChromeDriver();
         driver.manage().window().maximize();
         driver.get("https://www.cfrcalatori.ro/");
@@ -101,12 +113,13 @@ public class HourBug {
                     countNumberList.add(selectHour.getAttribute("value"));
                     rightArrow.click();
                 }
-                System.out.println("Count: " + countNumberList);
+                LOGGER.info(countNumberList.toString());
                 /**
                  * See if countNumberList contains each element of hourList
                  */
                 for(String hour : hoursList){
                     Assert.assertTrue(countNumberList.contains(hour), hour + " doesn't appear");
+                    LOGGER.error(hour + " doesn't appear");
                 }
                 Thread.sleep(1_000);
                 /**
@@ -120,14 +133,14 @@ public class HourBug {
                     countdownNumberList.add(selectHour.getAttribute("value"));
                     leftArrow.click();
                 }
-                System.out.println("Countdown: " + countdownNumberList);
+                LOGGER.info("Countdown: " + countdownNumberList);
                 /**
                  * See if countdownNumberList contains each element of hourList
                  */
                 for(String hour: hoursList){
                     Assert.assertTrue(countdownNumberList.contains(hour), hour + " doesn't appear");
+                    LOGGER.error(hour + " doesn't appear");
                 }
-                System.out.println("Countdown: " + countdownNumberList);
             }
         }
         /**
