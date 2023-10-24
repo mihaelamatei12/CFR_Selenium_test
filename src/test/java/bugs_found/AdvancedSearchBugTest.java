@@ -36,7 +36,7 @@ public class AdvancedSearchBugTest {
     @Test
     private void verifyIfTheSecondPageRemainsInRomanian() throws InterruptedException{
         /**
-         * First page is in romanian automaticaly
+         * First page is in romanian automatically
          */
         WebElement flag = driver.findElement(By.cssSelector("#wp-megamenu-item-wpml-ls-2-en > a > img"));
         Assert.assertNotNull(flag);

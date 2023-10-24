@@ -70,7 +70,7 @@ public class HourBug {
     @Test
     private void verifyIfAllHoursAppearWhenClickingOnLeftAndRightButtons() throws InterruptedException {
         /**
-         * Select
+         * Select international ticket
          */
         WebElement internationalButton = driver.findElement(By.cssSelector("#menu-item-14317 > a"));
         Assert.assertNotNull(internationalButton);

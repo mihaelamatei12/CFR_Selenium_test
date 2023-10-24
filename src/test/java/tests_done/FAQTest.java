@@ -24,11 +24,6 @@ public class FAQTest {
 
     @BeforeTest
     private void initializeWebDriver() throws IOException {
-        /**
-         * Properties properties = new Properties();
-         *         properties.load(TestFile.class.getClassLoader().getResourceAsStream("my_props.properties"));
-         *         System.out.println(properties.getProperty("fortza"));
-         */
         Properties properties = new Properties();
         properties.load(FAQTest.class.getClassLoader().getResourceAsStream("driver_path.properties"));
         String driverPath = properties.getProperty("path");
