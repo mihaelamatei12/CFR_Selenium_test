@@ -1,5 +1,7 @@
 # CFR_Selenium_test
-I tested the site "https://www.cfrcalatori.ro/". There are 5 test and 3 bugs found.
+Automatic testing on the site "https://www.cfrcalatori.ro/" using Selenium with Java language , to evaluate the functionality and user experience of the website. There are 5 test and 3 bugs found.
+
+The file _src/test/resources/driver_path.properties_ contains the path for the ChromeDriver. Change it with the path where you have the Chrome driver installed.
 
 ## Test description
 ### BuyInternationalTicketOneWay
